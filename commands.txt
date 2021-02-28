@@ -1,3 +1,6 @@
 Commands :
 sudo docker-compose run --rm artisan
+docker-compose run --rm composer require predis/predis
+sudo docker exec -it redis-cont-auth sh
+
 
