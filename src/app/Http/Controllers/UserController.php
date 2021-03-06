@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use Validator;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Services\RedisService;
@@ -17,27 +18,25 @@ class UserController extends Controller
 		$this->user = $user;
 	}
 	  
-    public function create() {
+    public function create(Request $request) {
     	
-    	$request = Request();
     	$input = $request->all();
 
-    	if ((isset($input['email']) == false) or (isset($input['password']) == false)) {
-    		 return \Response::json(['message' => 'Bad Request!'], 400);
-    	}
+        $rules = [
+            'email'    => 'required|unique:users|email',
+            'password' => 'required',
+        ];
 
-        $user = $this->user->getBy('email',$input['email']);
-
-    	if($user) {
-    		return \Response::json(['message' => 'User with that username allready exists!'], 400);
-    	}
+        $validator = Validator::make($input, $rules);
+        
+        if ($validator->fails()) {
+            return \Response::json(['message' => $validator->messages()], 400);
+        }
 
         $newUser = $this->user->new($input);
 
     	if($newUser) {
 
-    		//$userImage = UserImageController::storeFile($input,$newUser->id);
-    	
             //AclService::setPermissions($newUser);
 
     		return \Response::json(['message' => 'Successfully saved item!'], 201);
@@ -52,24 +51,25 @@ class UserController extends Controller
     	
     	$input = $request->all();
 
-    	if ((isset($input['email']) == false) or (isset($input['password']) == false)) {
-    		 return \Response::json(['message' => 'Bad Request!'], 400);
-    	}
+    	$rules = [
+            'email'    => 'required',
+            'password' => 'required',
+        ];
 
-    	//$user = User::where('email', $input['email'])->first();
+        $validator = Validator::make($input, $rules);
+        
+        if ($validator->fails()) {
+            return \Response::json(['message' => $validator->messages()], 400);
+        }
+
         $user = $this->user->getBy('email',$input['email']);
-       
-		//if($user == null or !password_verify($input['password'], $user->password)) {        
+              
         if($user == null or !Hash::check($input['password'], $user->password)) {
 			 return \Response::json(['message' => 'Not Found!'], 404);
 		}
 
-        /*if(UserLogController::create(["user_id"=>$user->id,'ip_address'=>$request->getClientIp()]) != true){
-             return \Response::json(['message' => 'Server Error!'], 500);
-        }*/
-
 		$authToken = Str::random(60);
-        //$authToken = bin2hex(openssl_random_pseudo_bytes(32));
+        
         RedisService::setValue($authToken,$user->email);
 
 		$user->api_token = $authToken;
@@ -95,6 +95,15 @@ class UserController extends Controller
 
     	return \Response::json(['message' => 'Successfully logged out!'], 200);
 
+    }
+
+    private function validateRequest(Request $request, array $rules) {
+
+        $input = $request->all();
+
+        $validator = Validator::make($input, $rules);
+
+        return $validator->fails();    
     }
 
 }
