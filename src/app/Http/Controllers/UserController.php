@@ -93,13 +93,4 @@ class UserController extends Controller
 
     }
 
-    private function validateRequest(Request $request, array $rules) {
-
-        $input = $request->all();
-
-        $validator = Validator::make($input, $rules);
-
-        return $validator->fails();    
-    }
-
 }
