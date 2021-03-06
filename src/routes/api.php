@@ -23,3 +23,8 @@ Route::post('/users/register', 'UserController@create');
 Route::post('/users/login', 'UserController@login');
 
 Route::put('/users/logout/{token}', 'UserController@logout');
+
+Route::middleware(['check.auth'])->group(function () {
+	Route::get('/comments/index', 'CommentController@index');
+});
+
