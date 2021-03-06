@@ -22,4 +22,4 @@ Route::post('/users/register', 'UserController@create');
 
 Route::post('/users/login', 'UserController@login');
 
-Route::put('/users/logout/{token?}', 'UserController@logout');
+Route::put('/users/logout/{token}', 'UserController@logout');

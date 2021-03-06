@@ -78,11 +78,7 @@ class UserController extends Controller
 
     }
 
-    public function logout($token=null) {
-
-    	if($token == null) {
-    		return \Response::json(['message' => 'Bad Request!'], 400);
-    	}
+    public function logout(string $token) {
 
     	//find auth_token in Redis and delete it
         $user = RedisService::getValue($token);
