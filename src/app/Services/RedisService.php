@@ -46,9 +46,12 @@ class RedisService
 
 	}
 
-	public static function removeValue(string $key) : bool {
+	public static function removeValue(string $key, $connection=null) : bool {
 
-		Redis::del($key);
+		$redisCinnection = ($connection == null) ? self::$defaultConnection : $connection;
+		$redis = Redis::connection($redisCinnection);
+
+		$redis->del($key);
 
 		return true;
 

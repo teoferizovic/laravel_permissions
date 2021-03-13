@@ -6,6 +6,7 @@ use App\User;
 use Validator;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Services\ACLService;
 use App\Services\RedisService;
 use Illuminate\Support\Facades\Hash;
 
@@ -72,7 +73,9 @@ class UserController extends Controller
         
         RedisService::setValue($authToken,$user->email);
 
-		$user->api_token = $authToken;
+		$user->token = $authToken;
+
+        ACLService::setPermissions($user);
 		
     	return \Response::json($user, 200);
 
@@ -88,6 +91,7 @@ class UserController extends Controller
     	}
         
         RedisService::removeValue($token);
+        RedisService::removeValue($token . '-' . 'ACL', 'acl');
 
     	return \Response::json(['message' => 'Successfully logged out!'], 200);
 
