@@ -25,22 +25,33 @@ class RedisService
 	}
 
 	public static function setExpire(string $key,int $expire, $connection=null) : bool {
+
 		$redisCinnection = ($connection==null) ? self::$defaultConnection : $connection;
 		$redis = Redis::connection($redisCinnection);
+		
 		$redis->expire($key, $expire);
+		
 		return true;
+
 	}
 
 	public static function getValue(string $key,$connection=null) : string {
+
 	     $redisCinnection = ($connection==null) ? self::$defaultConnection : $connection;
 	     $redis = Redis::connection($redisCinnection);		
+		 
 		 $value = $redis->get($key);
+		 
 		 return ($value != null) ? $value : '';
+
 	}
 
 	public static function removeValue(string $key) : bool {
+
 		Redis::del($key);
+
 		return true;
+
 	}
 
 	public static function getValues() : array {
@@ -76,8 +87,11 @@ class RedisService
 	}
 
 	public static function publishOnChannel(string $channel) : bool {
+
 		Redis::publish($channel, json_encode(['foo' => 'bar']));
+		
 		return true;
+
 	}
 
 	//keys *#6#*

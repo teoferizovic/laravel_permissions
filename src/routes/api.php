@@ -25,6 +25,22 @@ Route::post('/users/login', 'UserController@login');
 Route::put('/users/logout/{token}', 'UserController@logout');
 
 Route::middleware(['check.auth'])->group(function () {
+
 	Route::get('/comments/index', 'CommentController@index');
+
+	Route::post('/comments/create', 'CommentController@create');
+
+	Route::put('/comments/update/{id}', 'CommentController@update');
+
+	Route::delete('/comments/delete/{id}', 'CommentController@delete');
+
+	Route::get('/posts/index', 'PostController@index');
+
+	Route::post('/posts/create', 'PostController@create');
+
+	Route::put('/posts/update/{id}', 'PostController@update');
+
+	Route::delete('/posts/delete/{id}', 'PostController@delete');
+
 });
 
