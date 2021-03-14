@@ -4,13 +4,12 @@ namespace App\Services;
 
 use App\User;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redis;
 
 class ACLService
 {
 
-	public static function setPermissions(User $user) {
-		
+	public static function setPermissions(User $user) : bool {
+
 		$rolePermissions = DB::select('SELECT rp.id,rp.permission_id,rp.model_name, p.name as permision_name FROM role_permissions as rp inner join permissions as p on rp.permission_id = p.id
 			where role_id = :roleId',['roleId' => $user->role_id]
 		);
@@ -27,7 +26,7 @@ class ACLService
 			RedisService::setValue($redisAclKey,json_encode($permissions),'acl');
 		}
 		
-		
+		return true;
 	}
 
 }

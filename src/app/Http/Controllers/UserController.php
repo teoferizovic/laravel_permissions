@@ -38,8 +38,6 @@ class UserController extends Controller
 
     	if($newUser) {
 
-            //AclService::setPermissions($newUser);
-
     		return \Response::json(['message' => 'Successfully saved item!'], 201);
     	}
 

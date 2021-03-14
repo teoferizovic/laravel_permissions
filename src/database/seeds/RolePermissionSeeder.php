@@ -76,5 +76,21 @@ class RolePermissionSeeder extends Seeder
                 'model_name' => 'posts'
             ]
         );
+        RolePermission::updateOrCreate(
+            ['id' =>  9],
+            [
+                'role_id' => 2,
+                'permission_id' => 1,
+                'model_name' => 'comments'
+            ]
+        );
+        RolePermission::updateOrCreate(
+            ['id' =>  10],
+            [
+                'role_id' => 2,
+                'permission_id' => 2,
+                'model_name' => 'comments'
+            ]
+        );
     }
 }
